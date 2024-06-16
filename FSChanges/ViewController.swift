@@ -35,8 +35,21 @@ final class ViewController: NSViewController {
 		if sender.title == "Open…" {
 			let openPanel = NSOpenPanel()
 			openPanel.canChooseDirectories = true
+			openPanel.canChooseFiles = false
+			openPanel.allowsMultipleSelection = true
 			if openPanel.runModal() == NSApplication.ModalResponse.OK {
-				content = GenerateTree.recursiveGen(path: openPanel.url!)
+				// reset the currently displayed list
+				content = [TreeNode]()
+				for u in openPanel.urls {
+					if openPanel.urls.count > 1 {
+						// need to add a false "root" for each directory they picked so all picked directories stay neat in the tree
+						content.append(TreeNode.init(url: u, name: u.lastPathComponent, isDir: true, fileSize: 0, fileAllocatedSize: 0, totalFileAllocatedSize: 0, children: GenerateTree.recursiveGen(path: u)))
+						
+					} else {
+						// they only chose one directory, so we show them the contents of that directory directly.
+						content.append(contentsOf: GenerateTree.recursiveGen(path: u))
+					}
+				}
 			}
 			
 		}
