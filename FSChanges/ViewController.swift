@@ -48,16 +48,24 @@ final class ViewController: NSViewController {
 					for u in openPanel.urls {
 						// need to add a false "root" for each directory they picked so all picked directories stay neat in the tree
 						DispatchQueue.global().async {
-							self.content.append(TreeNode.init(url: u, name: u.lastPathComponent, isDir: true, fileSize: 0, fileAllocatedSize: 0, totalFileAllocatedSize: 0, children: GenerateTree.recursiveGen(path: u)))
+							let selectedRootNode: TreeNode = TreeNode.init(url: u, name: u.lastPathComponent, isDir: true, fileSize: 0, fileAllocatedSize: 0, totalFileAllocatedSize: 0, children: GenerateTree.recursiveGen(path: u))
+							DispatchQueue.main.async {
+								self.content.append(selectedRootNode)
+							}
 						}
+						
 					}
 				} else {
 					// they only chose one directory, so we show them the contents of that directory directly.
 					//self.view.window?.title = "FSChanges: \(u.path)"
 					let u = openPanel.urls[0]
 					self.view.window?.setTitleWithRepresentedFilename(u.path)
+					
 					DispatchQueue.global().async {
-						self.content.append(contentsOf: GenerateTree.recursiveGen(path: u))
+						let selectedRootNode: [TreeNode] = GenerateTree.recursiveGen(path: u)
+						DispatchQueue.main.async {
+							self.content.append(contentsOf: selectedRootNode)
+						}
 					}
 				}
 			}
