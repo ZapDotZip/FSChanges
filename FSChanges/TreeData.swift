@@ -37,7 +37,7 @@ import Foundation
 
 struct GenerateTree {
 	static let resourceKeys: [URLResourceKey] = [.isDirectoryKey, .fileSizeKey, .fileAllocatedSizeKey, .totalFileAllocatedSizeKey]
-	
+	static var viewCon: ViewController?
 	static func recursiveGen(path: URL) -> [TreeNode] {
 		var nodes = [TreeNode]()
 		
@@ -46,15 +46,22 @@ struct GenerateTree {
 			return true
 		}) {
 			for case let i as URL in enumerator {
+				
 				do {
 					let resValues = try i.resourceValues(forKeys: Set(resourceKeys))
 					if resValues.isDirectory ?? false {
 						nodes.append(TreeNode.init(url: i, name: i.lastPathComponent, isDir: true, fileSize: 	resValues.fileSize ?? 0, fileAllocatedSize: resValues.fileAllocatedSize ?? 0, 	totalFileAllocatedSize: resValues.totalFileAllocatedSize ?? 0, children: recursiveGen(path: i)))
 					} else {
 						nodes.append(TreeNode.init(url: i, name: i.lastPathComponent, isDir: false, fileSize: 	resValues.fileSize ?? 0, fileAllocatedSize: resValues.fileAllocatedSize ?? 0, 	totalFileAllocatedSize: resValues.totalFileAllocatedSize ?? 0))
+						DispatchQueue.main.async {
+							viewCon?.progress.doubleValue += 1.0
+							viewCon?.progressLabel.stringValue = i.path
+						}
 					}
 				} catch  {
-					print("error: \(error)")
+					DispatchQueue.main.async {
+						print("error: \(error)")
+					}
 				}
 			}
 			

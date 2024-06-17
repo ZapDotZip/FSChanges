@@ -8,12 +8,14 @@ import Cocoa
 
 final class ViewController: NSViewController {
 	@IBOutlet weak var outlineView: NSOutlineView!
+	@IBOutlet var progress: NSProgressIndicator!
+	@IBOutlet var progressLabel: NSTextField!
 	private let treeController = NSTreeController()
 	@objc dynamic var content = [TreeNode]()
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+		GenerateTree.viewCon = self
 		outlineView.delegate = self
 		
 		treeController.objectClass = TreeNode.self
@@ -40,21 +42,32 @@ final class ViewController: NSViewController {
 			if openPanel.runModal() == NSApplication.ModalResponse.OK {
 				// reset the currently displayed list
 				content = [TreeNode]()
-				for u in openPanel.urls {
-					if openPanel.urls.count > 1 {
+				if openPanel.urls.count > 1 {
+					self.view.window?.setTitleWithRepresentedFilename(openPanel.urls[0].path)
+					self.view.window?.title = "FSChanges: \(openPanel.urls.count) open directories including \(openPanel.urls[0].path)"
+					for u in openPanel.urls {
 						// need to add a false "root" for each directory they picked so all picked directories stay neat in the tree
-						content.append(TreeNode.init(url: u, name: u.lastPathComponent, isDir: true, fileSize: 0, fileAllocatedSize: 0, totalFileAllocatedSize: 0, children: GenerateTree.recursiveGen(path: u)))
-						
-					} else {
-						// they only chose one directory, so we show them the contents of that directory directly.
-						content.append(contentsOf: GenerateTree.recursiveGen(path: u))
+						DispatchQueue.global().async {
+							self.content.append(TreeNode.init(url: u, name: u.lastPathComponent, isDir: true, fileSize: 0, fileAllocatedSize: 0, totalFileAllocatedSize: 0, children: GenerateTree.recursiveGen(path: u)))
+						}
+					}
+				} else {
+					// they only chose one directory, so we show them the contents of that directory directly.
+					//self.view.window?.title = "FSChanges: \(u.path)"
+					let u = openPanel.urls[0]
+					self.view.window?.setTitleWithRepresentedFilename(u.path)
+					DispatchQueue.global().async {
+						self.content.append(contentsOf: GenerateTree.recursiveGen(path: u))
 					}
 				}
 			}
-			
 		}
 	}
 	
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		self.view.window?.title = "FSChanges"
+	}
 	
 }
 

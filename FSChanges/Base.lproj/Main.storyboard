@@ -723,17 +723,17 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="FSChanges" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" misplaced="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="848" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="852" height="450"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yHF-Lx-UI5">
-                                <rect key="frame" x="0.0" y="0.0" width="848" height="600"/>
+                                <rect key="frame" x="0.0" y="32" width="852" height="418"/>
                                 <clipView key="contentView" drawsBackground="NO" id="qLy-dk-RR6">
-                                    <rect key="frame" x="1" y="0.0" width="846" height="599"/>
+                                    <rect key="frame" x="1" y="0.0" width="850" height="417"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="u8v-XW-MxE" viewBased="YES" indentationPerLevel="16" outlineTableColumn="VGT-AQ-tLu" id="6Xf-j0-9mT">
-                                            <rect key="frame" x="0.0" y="0.0" width="846" height="574"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="850" height="392"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="2" height="3"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -779,7 +779,7 @@
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn identifier="size" width="94" minWidth="40" maxWidth="1000" id="azy-l8-EaN">
+                                                <tableColumn identifier="size" width="98" minWidth="40" maxWidth="1000" id="azy-l8-EaN">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Size">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -793,11 +793,11 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="tjC-kN-CKQ">
-                                                            <rect key="frame" x="751" y="1" width="94" height="17"/>
+                                                            <rect key="frame" x="751" y="1" width="98" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="JFt-mW-DKa">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="94" height="17"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="98" height="17"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="17" id="Qrs-B1-BVJ"/>
                                                                     </constraints>
@@ -825,7 +825,7 @@
                                     <nil key="backgroundColor"/>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="DYp-X6-x6b">
-                                    <rect key="frame" x="1" y="558" width="798" height="16"/>
+                                    <rect key="frame" x="1" y="401" width="850" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="S72-he-tHI">
@@ -833,27 +833,68 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="u8v-XW-MxE">
-                                    <rect key="frame" x="0.0" y="0.0" width="846" height="25"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="850" height="25"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
+                            <progressIndicator wantsLayer="YES" maxValue="100" displayedWhenStopped="NO" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="JsL-D1-gMA">
+                                <rect key="frame" x="8" y="5" width="104" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="104" id="7ED-5T-vJz"/>
+                                    <constraint firstAttribute="height" constant="18" id="8Zx-cD-9EG"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="18" id="bvT-Om-Qor"/>
+                                </constraints>
+                            </progressIndicator>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t5y-4a-vnd">
+                                <rect key="frame" x="118" y="8" width="724" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="16" id="Bta-YM-joZ"/>
+                                    <constraint firstAttribute="height" constant="16" id="WFp-7l-72O"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="16" id="bea-uq-fAI"/>
+                                </constraints>
+                                <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" alignment="left" usesSingleLineMode="YES" id="vRp-Pz-2bi">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="yHF-Lx-UI5" secondAttribute="bottom" id="8ne-w2-Wbs"/>
+                            <constraint firstAttribute="bottom" secondItem="t5y-4a-vnd" secondAttribute="bottom" constant="8" id="3MW-O1-XZX"/>
+                            <constraint firstItem="t5y-4a-vnd" firstAttribute="top" secondItem="yHF-Lx-UI5" secondAttribute="bottom" constant="8" id="65e-gC-mZg"/>
+                            <constraint firstAttribute="bottom" secondItem="JsL-D1-gMA" secondAttribute="bottom" constant="6" id="7QZ-ka-WFr"/>
                             <constraint firstItem="yHF-Lx-UI5" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="9uU-NO-4Hk"/>
+                            <constraint firstItem="t5y-4a-vnd" firstAttribute="top" secondItem="yHF-Lx-UI5" secondAttribute="bottom" constant="8" id="Dpt-J7-JaT"/>
+                            <constraint firstItem="JsL-D1-gMA" firstAttribute="top" secondItem="yHF-Lx-UI5" secondAttribute="bottom" constant="8" id="E4P-BD-Fe3"/>
+                            <constraint firstItem="JsL-D1-gMA" firstAttribute="top" secondItem="yHF-Lx-UI5" secondAttribute="bottom" constant="8" id="EIh-o9-eNc"/>
                             <constraint firstItem="yHF-Lx-UI5" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="ENS-3a-vFD"/>
                             <constraint firstAttribute="trailing" secondItem="yHF-Lx-UI5" secondAttribute="trailing" id="K54-xy-kHJ"/>
-                            <constraint firstAttribute="bottom" secondItem="yHF-Lx-UI5" secondAttribute="bottom" id="PpH-LZ-ibn"/>
+                            <constraint firstAttribute="bottom" secondItem="yHF-Lx-UI5" secondAttribute="bottom" constant="32" id="PpH-LZ-ibn"/>
+                            <constraint firstItem="t5y-4a-vnd" firstAttribute="leading" secondItem="JsL-D1-gMA" secondAttribute="trailing" constant="8" id="UPM-D8-fOm"/>
+                            <constraint firstAttribute="bottom" secondItem="JsL-D1-gMA" secondAttribute="bottom" constant="6" id="XXb-gC-9Fd"/>
+                            <constraint firstAttribute="trailing" secondItem="JsL-D1-gMA" secondAttribute="trailing" constant="740" id="Y3v-WR-6KE"/>
+                            <constraint firstItem="t5y-4a-vnd" firstAttribute="leading" secondItem="JsL-D1-gMA" secondAttribute="trailing" constant="8" id="YeR-Yr-x6L"/>
+                            <constraint firstItem="JsL-D1-gMA" firstAttribute="top" secondItem="yHF-Lx-UI5" secondAttribute="bottom" constant="8" id="aDU-RX-IIE"/>
+                            <constraint firstAttribute="trailing" secondItem="t5y-4a-vnd" secondAttribute="trailing" constant="12" id="aje-sl-QNY"/>
+                            <constraint firstAttribute="bottom" secondItem="JsL-D1-gMA" secondAttribute="bottom" constant="6" id="cQk-4K-S64"/>
+                            <constraint firstItem="JsL-D1-gMA" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="8" id="dwt-Q2-Cfb"/>
+                            <constraint firstAttribute="trailing" secondItem="t5y-4a-vnd" secondAttribute="trailing" constant="12" id="kps-Pr-UQQ"/>
+                            <constraint firstItem="JsL-D1-gMA" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="8" id="lVZ-xq-8pC"/>
+                            <constraint firstItem="JsL-D1-gMA" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="8" id="o4D-yU-0Vs"/>
                             <constraint firstItem="yHF-Lx-UI5" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="uZF-j7-BQN"/>
+                            <constraint firstAttribute="bottom" secondItem="t5y-4a-vnd" secondAttribute="bottom" constant="8" id="xLB-hU-3NX"/>
+                            <constraint firstItem="t5y-4a-vnd" firstAttribute="top" secondItem="yHF-Lx-UI5" secondAttribute="bottom" constant="8" id="ynv-U0-k0k"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="outlineView" destination="6Xf-j0-9mT" id="3jI-UB-rfp"/>
+                        <outlet property="progress" destination="JsL-D1-gMA" id="at1-Ac-rjE"/>
+                        <outlet property="progressLabel" destination="t5y-4a-vnd" id="e3e-ey-yhb"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="1028"/>
+            <point key="canvasLocation" x="75" y="1151"/>
         </scene>
     </scenes>
 </document>
