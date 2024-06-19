@@ -41,18 +41,17 @@ struct GenerateTree {
 	static func recursiveGen(path: URL) -> [TreeNode] {
 		var nodes = [TreeNode]()
 		
-		if let enumerator = FileManager.default.enumerator(at: path, includingPropertiesForKeys: resourceKeys, errorHandler: { (url, err) -> Bool in
+		if let enumerator = FileManager.default.enumerator(at: path, includingPropertiesForKeys: resourceKeys, options: [.skipsSubdirectoryDescendants], errorHandler: { (url, err) -> Bool in
 			print("Error recursing into directory: \(err)")
 			return true
 		}) {
 			for case let i as URL in enumerator {
-				
 				do {
 					let resValues = try i.resourceValues(forKeys: Set(resourceKeys))
 					if resValues.isDirectory ?? false {
-						nodes.append(TreeNode.init(url: i, name: i.lastPathComponent, isDir: true, fileSize: 	resValues.fileSize ?? 0, fileAllocatedSize: resValues.fileAllocatedSize ?? 0, 	totalFileAllocatedSize: resValues.totalFileAllocatedSize ?? 0, children: recursiveGen(path: i)))
+						nodes.append(TreeNode.init(url: i, name: i.lastPathComponent, isDir: true, fileSize: resValues.fileSize ?? 0, fileAllocatedSize: resValues.fileAllocatedSize ?? 0, totalFileAllocatedSize: resValues.totalFileAllocatedSize ?? 0, children: recursiveGen(path: i)))
 					} else {
-						nodes.append(TreeNode.init(url: i, name: i.lastPathComponent, isDir: false, fileSize: 	resValues.fileSize ?? 0, fileAllocatedSize: resValues.fileAllocatedSize ?? 0, 	totalFileAllocatedSize: resValues.totalFileAllocatedSize ?? 0))
+						nodes.append(TreeNode.init(url: i, name: i.lastPathComponent, isDir: false, fileSize: resValues.fileSize ?? 0, fileAllocatedSize: resValues.fileAllocatedSize ?? 0, totalFileAllocatedSize: resValues.totalFileAllocatedSize ?? 0))
 						DispatchQueue.main.async {
 							viewCon?.progress.doubleValue += 1.0
 							viewCon?.progressLabel.stringValue = i.path
