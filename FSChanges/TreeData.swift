@@ -32,12 +32,25 @@ import Foundation
 	@objc var isLeaf: Bool {
 		children.isEmpty
 	}
+	
+	override public var description: String {
+		get {
+			return "\(url): fileSize: \(GenerateTree.fmt.string(fromByteCount: Int64(fileSize))), fileAllocatedSize: \(GenerateTree.fmt.string(fromByteCount: Int64(fileAllocatedSize))), totalFileAllocatedSize: \(GenerateTree.fmt.string(fromByteCount: Int64(totalFileAllocatedSize)))"
+		}
+	}
+	
+	@objc var dataSize: String {
+		get {
+			return GenerateTree.fmt.string(fromByteCount: Int64(fileAllocatedSize))
+		}
+	}
 }
 
 
 struct GenerateTree {
 	static let resourceKeys: [URLResourceKey] = [.isDirectoryKey, .fileSizeKey, .fileAllocatedSizeKey, .totalFileAllocatedSizeKey]
 	static var viewCon: ViewController?
+	static let fmt = ByteCountFormatter()
 	static func recursiveGen(path: URL) -> [TreeNode] {
 		var nodes = [TreeNode]()
 		
@@ -56,6 +69,7 @@ struct GenerateTree {
 							viewCon?.progress.doubleValue += 1.0
 							viewCon?.progressLabel.stringValue = i.path
 						}
+						print(nodes.last!)
 					}
 				} catch  {
 					DispatchQueue.main.async {

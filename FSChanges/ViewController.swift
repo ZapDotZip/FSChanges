@@ -85,7 +85,7 @@ extension ViewController: NSOutlineViewDelegate {
 			}
 		case .init("size"):
 			if let view = outlineView.makeView(withIdentifier: identifier, owner: outlineView.delegate) as? NSTableCellView {
-				view.textField?.bind(.value, to: view, withKeyPath: "objectValue.fileSize", options: nil)
+				view.textField?.bind(.value, to: view, withKeyPath: "objectValue.dataSize", options: nil)
 				cellView = view
 			}
 		default:
