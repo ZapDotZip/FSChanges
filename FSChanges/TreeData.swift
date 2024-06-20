@@ -67,4 +67,28 @@ struct GenerateTree {
 		}
 		return nodes
 	}
+	
+	
+	static func multiFolderLoader(paths: [URL]) {
+		for u in paths {
+			let selectedRootNode: TreeNode = TreeNode.init(url: u, name: u.lastPathComponent, isDir: true, fileSize: 0, fileAllocatedSize: 0, totalFileAllocatedSize: 0, children: GenerateTree.recursiveGen(path: u))
+			DispatchQueue.main.async {
+				self.viewCon!.content.append(selectedRootNode)
+				self.viewCon!.progress.doubleValue = 0.0
+			}
+		}
+		DispatchQueue.main.async {
+			self.viewCon!.progress.doubleValue = self.viewCon!.progress.maxValue
+			self.viewCon!.progressLabel.stringValue = "All done."
+		}
+	}
+	
+	static func folderLoader(path: URL) {
+		let selectedRootNode: [TreeNode] = GenerateTree.recursiveGen(path: path)
+		DispatchQueue.main.async {
+			self.viewCon!.content.append(contentsOf: selectedRootNode)
+			self.viewCon!.progress.doubleValue = self.viewCon!.progress.maxValue
+			self.viewCon!.progressLabel.stringValue = "All done."
+		}
+	}
 }

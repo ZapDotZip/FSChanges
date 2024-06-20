@@ -47,16 +47,9 @@ final class ViewController: NSViewController {
 				if openPanel.urls.count > 1 {
 					self.view.window?.setTitleWithRepresentedFilename(openPanel.urls[0].path)
 					self.view.window?.title = "FSChanges: \(openPanel.urls.count) open directories including \(openPanel.urls[0].path)"
-					for u in openPanel.urls {
-						// need to add a false "root" for each directory they picked so all picked directories stay neat in the tree
-						DispatchQueue.global().async {
-							let selectedRootNode: TreeNode = TreeNode.init(url: u, name: u.lastPathComponent, isDir: true, fileSize: 0, fileAllocatedSize: 0, totalFileAllocatedSize: 0, children: GenerateTree.recursiveGen(path: u))
-							DispatchQueue.main.async {
-								self.content.append(selectedRootNode)
-								self.progress.doubleValue = 0.0
-							}
-						}
-						
+					let paths = openPanel.urls
+					DispatchQueue.global().async {
+						GenerateTree.multiFolderLoader(paths: paths)
 					}
 				} else {
 					//self.view.window?.title = "FSChanges: \(u.path)"
@@ -64,11 +57,7 @@ final class ViewController: NSViewController {
 					self.view.window?.setTitleWithRepresentedFilename(u.path)
 					
 					DispatchQueue.global().async {
-						let selectedRootNode: [TreeNode] = GenerateTree.recursiveGen(path: u)
-						DispatchQueue.main.async {
-							self.content.append(contentsOf: selectedRootNode)
-							self.progress.doubleValue = self.progress.maxValue
-						}
+						GenerateTree.folderLoader(path: u)
 					}
 				}
 			}
