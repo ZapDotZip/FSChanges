@@ -82,15 +82,18 @@ extension ViewController: NSOutlineViewDelegate {
 			if let view = outlineView.makeView(withIdentifier: identifier, owner: outlineView.delegate) as? NSTableCellView {
 				view.textField?.bind(.value, to: view, withKeyPath: "objectValue.name", options: nil)
 				cellView = view
+				tableColumn?.sortDescriptorPrototype = NSSortDescriptor.init(key: "objectValue.name", ascending: true)
 			}
 		case .init("size"):
 			if let view = outlineView.makeView(withIdentifier: identifier, owner: outlineView.delegate) as? NSTableCellView {
 				view.textField?.bind(.value, to: view, withKeyPath: "objectValue.dataSize", options: nil)
 				cellView = view
+				tableColumn?.sortDescriptorPrototype = NSSortDescriptor.init(key: "objectValue.dataSize", ascending: false)
 			}
 		default:
 			return cellView
 		}
+		
 		return cellView
 	}
 }
