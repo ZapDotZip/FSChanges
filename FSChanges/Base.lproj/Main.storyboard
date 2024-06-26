@@ -753,29 +753,28 @@
                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="objectValue.name"/>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView id="CSS-gy-GmR">
+                                                        <tableCellView id="MB5-XV-Hgx">
                                                             <rect key="frame" x="1" y="1" width="748" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="dso-jl-mrk">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="748" height="17"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="height" constant="17" id="7dB-vS-wM1"/>
-                                                                    </constraints>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="vkK-ZN-neF">
+                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TMO-Er-wCk">
+                                                                    <rect key="frame" x="3" y="0.0" width="17" height="17"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSImage" id="Gdn-ph-FN9"/>
+                                                                </imageView>
+                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gFK-7M-B2L">
+                                                                    <rect key="frame" x="25" y="0.0" width="723" height="17"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="34y-XT-vWr">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
                                                                 </textField>
                                                             </subviews>
-                                                            <constraints>
-                                                                <constraint firstItem="dso-jl-mrk" firstAttribute="centerY" secondItem="CSS-gy-GmR" secondAttribute="centerY" id="1Y9-vF-Oz7"/>
-                                                                <constraint firstItem="dso-jl-mrk" firstAttribute="centerX" secondItem="CSS-gy-GmR" secondAttribute="centerX" id="Edz-no-efG"/>
-                                                                <constraint firstItem="dso-jl-mrk" firstAttribute="leading" secondItem="CSS-gy-GmR" secondAttribute="leading" constant="2" id="GWT-sH-roO"/>
-                                                            </constraints>
                                                             <connections>
-                                                                <outlet property="textField" destination="dso-jl-mrk" id="Ftk-XW-jBn"/>
+                                                                <outlet property="imageView" destination="TMO-Er-wCk" id="xNC-Vh-i8K"/>
+                                                                <outlet property="textField" destination="gFK-7M-B2L" id="JyJ-Au-Crg"/>
                                                             </connections>
                                                         </tableCellView>
                                                     </prototypeCellViews>
@@ -899,4 +898,7 @@
             <point key="canvasLocation" x="75" y="1151"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSImage" width="128" height="128"/>
+    </resources>
 </document>

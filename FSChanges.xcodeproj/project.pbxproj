@@ -103,9 +103,9 @@
 				ED96F76D2C1E6DE8001338A4 /* AppDelegate.swift */,
 				ED96F76F2C1E6DE8001338A4 /* ViewController.swift */,
 				ED96F79B2C1E6E2D001338A4 /* TreeData.swift */,
-				ED96F7A22C1E757C001338A4 /* FSChanges.xcdatamodeld */,
-				ED96F7732C1E6DE9001338A4 /* Assets.xcassets */,
 				ED96F7752C1E6DE9001338A4 /* Main.storyboard */,
+				ED96F7732C1E6DE9001338A4 /* Assets.xcassets */,
+				ED96F7A22C1E757C001338A4 /* FSChanges.xcdatamodeld */,
 				ED96F7782C1E6DE9001338A4 /* Info.plist */,
 				ED96F7792C1E6DE9001338A4 /* FSChanges.entitlements */,
 			);

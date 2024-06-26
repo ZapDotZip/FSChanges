@@ -81,19 +81,19 @@ extension ViewController: NSOutlineViewDelegate {
 		case .init("TreeNode"):
 			if let view = outlineView.makeView(withIdentifier: identifier, owner: outlineView.delegate) as? NSTableCellView {
 				view.textField?.bind(.value, to: view, withKeyPath: "objectValue.name", options: nil)
+				view.imageView?.bind(.image, to: view, withKeyPath: "objectValue.icon", options: nil)
 				cellView = view
-				tableColumn?.sortDescriptorPrototype = NSSortDescriptor.init(key: "objectValue.name", ascending: true)
+				//tableColumn?.sortDescriptorPrototype = NSSortDescriptor.init(key: "objectValue.name", ascending: true)
 			}
 		case .init("size"):
 			if let view = outlineView.makeView(withIdentifier: identifier, owner: outlineView.delegate) as? NSTableCellView {
 				view.textField?.bind(.value, to: view, withKeyPath: "objectValue.dataSize", options: nil)
 				cellView = view
-				tableColumn?.sortDescriptorPrototype = NSSortDescriptor.init(key: "objectValue.dataSize", ascending: false)
+				//tableColumn?.sortDescriptorPrototype = NSSortDescriptor.init(key: "objectValue.dataSize", ascending: false)
 			}
 		default:
 			return cellView
 		}
-		
 		return cellView
 	}
 }

@@ -24,6 +24,7 @@ import Cocoa
 	//@objc let fileSize: Int
 	//@objc let fileAllocatedSize: Int
 	@objc let totalFileAllocatedSize: Int
+	@objc let icon: NSImage
 	@objc var children: [TreeNode]
 	//  fileSize: Int, fileAllocatedSize: Int,
 	init(url: URL, isDir: Bool, totalFileAllocatedSize: Int, children: [TreeNode] = []) {
@@ -34,6 +35,7 @@ import Cocoa
 		//self.fileAllocatedSize = fileAllocatedSize
 		self.totalFileAllocatedSize = totalFileAllocatedSize
 		self.children = children
+		self.icon = NSWorkspace.shared.icon(forFile: url.path)
 	}
 	
 	@objc var count: Int {
