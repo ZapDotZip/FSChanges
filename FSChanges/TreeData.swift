@@ -65,6 +65,7 @@ struct GenerateTree {
 	static let resourceKeys: [URLResourceKey] = [.isDirectoryKey, .fileSizeKey, .fileAllocatedSizeKey, .totalFileAllocatedSizeKey]
 	static var viewCon: ViewController?
 	static let fmt = ByteCountFormatter()
+	
 	static func recursiveGen(path: URL) -> ([TreeNode], Int) {
 		var nodes = [TreeNode]()
 		var totalSize: Int = 0

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED36712C2C2C796D001338A4 /* FSChanges.icns in Resources */ = {isa = PBXBuildFile; fileRef = ED36712B2C2C796D001338A4 /* FSChanges.icns */; };
 		ED96F76E2C1E6DE8001338A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED96F76D2C1E6DE8001338A4 /* AppDelegate.swift */; };
 		ED96F7702C1E6DE8001338A4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED96F76F2C1E6DE8001338A4 /* ViewController.swift */; };
 		ED96F7742C1E6DE9001338A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED96F7732C1E6DE9001338A4 /* Assets.xcassets */; };
@@ -15,6 +16,7 @@
 		ED96F78E2C1E6DEA001338A4 /* FSChangesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED96F78D2C1E6DEA001338A4 /* FSChangesUITests.swift */; };
 		ED96F79C2C1E6E2D001338A4 /* TreeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED96F79B2C1E6E2D001338A4 /* TreeData.swift */; };
 		ED96F7A42C1E757C001338A4 /* FSChanges.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = ED96F7A22C1E757C001338A4 /* FSChanges.xcdatamodeld */; };
+		EDCE20312C2F7090001338A4 /* StoredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCE20302C2F7090001338A4 /* StoredData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		ED36712B2C2C796D001338A4 /* FSChanges.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = FSChanges.icns; sourceTree = "<group>"; };
 		ED96F76A2C1E6DE8001338A4 /* FSChanges.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FSChanges.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED96F76D2C1E6DE8001338A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ED96F76F2C1E6DE8001338A4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -50,6 +53,7 @@
 		ED96F78F2C1E6DEA001338A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ED96F79B2C1E6E2D001338A4 /* TreeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeData.swift; sourceTree = "<group>"; };
 		ED96F7A32C1E757C001338A4 /* FSChanges.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FSChanges.xcdatamodel; sourceTree = "<group>"; };
+		EDCE20302C2F7090001338A4 /* StoredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,11 +107,13 @@
 				ED96F76D2C1E6DE8001338A4 /* AppDelegate.swift */,
 				ED96F76F2C1E6DE8001338A4 /* ViewController.swift */,
 				ED96F79B2C1E6E2D001338A4 /* TreeData.swift */,
-				ED96F7752C1E6DE9001338A4 /* Main.storyboard */,
-				ED96F7732C1E6DE9001338A4 /* Assets.xcassets */,
+				EDCE20302C2F7090001338A4 /* StoredData.swift */,
 				ED96F7A22C1E757C001338A4 /* FSChanges.xcdatamodeld */,
+				ED96F7752C1E6DE9001338A4 /* Main.storyboard */,
 				ED96F7782C1E6DE9001338A4 /* Info.plist */,
 				ED96F7792C1E6DE9001338A4 /* FSChanges.entitlements */,
+				ED36712B2C2C796D001338A4 /* FSChanges.icns */,
+				ED96F7732C1E6DE9001338A4 /* Assets.xcassets */,
 			);
 			path = FSChanges;
 			sourceTree = "<group>";
@@ -234,6 +240,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED36712C2C2C796D001338A4 /* FSChanges.icns in Resources */,
 				ED96F7772C1E6DE9001338A4 /* Main.storyboard in Resources */,
 				ED96F7742C1E6DE9001338A4 /* Assets.xcassets in Resources */,
 			);
@@ -264,6 +271,7 @@
 				ED96F7702C1E6DE8001338A4 /* ViewController.swift in Sources */,
 				ED96F76E2C1E6DE8001338A4 /* AppDelegate.swift in Sources */,
 				ED96F79C2C1E6E2D001338A4 /* TreeData.swift in Sources */,
+				EDCE20312C2F7090001338A4 /* StoredData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,7 +434,6 @@
 		ED96F7932C1E6DEA001338A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FSChanges/FSChanges.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -436,6 +443,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = zap.zip.FSChanges;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -445,7 +453,6 @@
 		ED96F7942C1E6DEA001338A4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FSChanges/FSChanges.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -455,6 +462,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = zap.zip.FSChanges;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
