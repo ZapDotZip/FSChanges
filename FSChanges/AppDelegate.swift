@@ -11,7 +11,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
-		StoredData.init()
+		_ = StoredData.init()
 		StoredData.goToFolder(path: URL(string: "/")!)
 	}
 
