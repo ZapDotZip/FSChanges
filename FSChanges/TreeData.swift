@@ -65,13 +65,29 @@ struct GenerateTree {
 	static let resourceKeys: [URLResourceKey] = [.isDirectoryKey, .fileSizeKey, .fileAllocatedSizeKey, .totalFileAllocatedSizeKey]
 	static var viewCon: ViewController?
 	static let fmt = ByteCountFormatter()
+	static var suppressPermissionErrors: Bool = false
 	
 	static func recursiveGen(path: URL) -> ([TreeNode], Int) {
 		var nodes = [TreeNode]()
 		var totalSize: Int = 0
 		
 		if let enumerator = FileManager.default.enumerator(at: path, includingPropertiesForKeys: resourceKeys, options: [.skipsSubdirectoryDescendants], errorHandler: { (url, err) -> Bool in
-			print("Error recursing into directory: \(err)")
+			DispatchQueue.main.async {
+				print("Error recursing into directory: \(err)")
+				if (err as NSError).code == 257 && !suppressPermissionErrors {
+					let alert = NSAlert()
+					alert.messageText = "Unable to scan item due to permissions"
+					alert.informativeText = "The item could not be opened due to a permissions error. Re-run the scan with admin privileges.\n\n\(err.localizedDescription)"
+					alert.alertStyle = .warning
+					alert.addButton(withTitle: "Ok")
+					alert.showsSuppressionButton = true
+					alert.suppressionButton?.title = "Silence subsequent permissions errors"
+					alert.runModal()
+					if let suppressionButton = alert.suppressionButton, suppressionButton.state == .on {
+						suppressPermissionErrors = true
+					}
+				}
+			}
 			return true
 		}) {
 			for case let i as URL in enumerator {
