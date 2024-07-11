@@ -4,14 +4,22 @@
 //
 
 import Cocoa
+import OSLog
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-	
+	private var bgContext: NSManagedObjectContext?
 	
 	
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
+		bgContext = (NSApp.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
+		bgContext!.automaticallyMergesChangesFromParent = true
+		
 		_ = StoredData.init()
+		StoredData.context = bgContext
+		StoredData.AppDel = self
+		_ = GenerateTree.init()
+		GenerateTree.context = bgContext
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -51,14 +59,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	
 	@IBAction func saveAction(_ sender: AnyObject?) {
 		// Performs the save action for the application, which is to send the save: message to the application's managed object context. Any encountered errors are presented to the user.
-		let context = persistentContainer.viewContext
+		//let context = persistentContainer.viewContext
 		
-		if !context.commitEditing() {
+		if !bgContext!.commitEditing() {
 			NSLog("\(NSStringFromClass(type(of: self))) unable to commit editing before saving")
 		}
-		if context.hasChanges {
+		if bgContext!.hasChanges {
 			do {
-				try context.save()
+				try bgContext!.save()
+				print("Saved Core Data")
 			} catch {
 				// Customize this code block to include application-specific recovery steps.
 				let nserror = error as NSError
