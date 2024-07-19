@@ -116,30 +116,15 @@ struct GenerateTree {
 						netSize += childrenNetSize
 					} else {
 						var sfi: SavedFileInfo {
-							do {
-								fetch.predicate = NSPredicate(format: "path = %@", i.path)
-								let result = try context!.fetch(fetch) as! [SavedFileInfo]
-								if result.count == 0 {
-									let f = SavedFileInfo.init(context: context!)
-									f.path = i.path
-									f.totalFileSize = 0
-									return f
-								} else {
-									return result[0]
-								}
-							} catch {
-								DispatchQueue.main.async {
-									let alert = NSAlert()
-									alert.messageText = "An error occurred accessing the database."
-									alert.informativeText = error.localizedDescription
-									alert.alertStyle = .critical
-									alert.addButton(withTitle: "Quit")
-									alert.runModal()
-									NSApplication.shared.terminate(nil)
-								}
+							fetch.predicate = NSPredicate(format: "path = %@", i.path)
+							if let result = try? (context!.fetch(fetch) as! [SavedFileInfo]).first {
+								return result
+							} else {
+								let f = SavedFileInfo.init(context: context!)
+								f.path = i.path
+								f.totalFileSize = 0
+								return f
 							}
-							NSLog("Something went REALLY wrong for this message to appear!")
-							return SavedFileInfo.init(context: context!)
 						}
 						
 						let totalFileSize = resValues.totalFileAllocatedSize ?? 0
