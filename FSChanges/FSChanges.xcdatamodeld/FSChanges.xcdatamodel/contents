@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="18G9323" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="SavedFileInfo" representedClassName="SavedFileInfo" syncable="YES" codeGenerationType="class">
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="path" attributeType="String"/>
         <attribute name="totalFileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SavedFolderInfo" inverseName="children" inverseEntity="SavedFolderInfo"/>
-    </entity>
-    <entity name="SavedFolderInfo" representedClassName="SavedFolderInfo" syncable="YES" codeGenerationType="class">
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="size" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="childFolders" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SavedFolderInfo" inverseName="childFolders" inverseEntity="SavedFolderInfo"/>
-        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SavedFileInfo" inverseName="parent" inverseEntity="SavedFileInfo"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="path"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="SavedFileInfo" positionX="-63" positionY="-18" width="128" height="88"/>
-        <element name="SavedFolderInfo" positionX="-63" positionY="0" width="128" height="103"/>
+        <element name="SavedFileInfo" positionX="-63" positionY="-18" width="128" height="73"/>
     </elements>
 </model>

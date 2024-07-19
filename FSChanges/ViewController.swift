@@ -34,6 +34,29 @@ final class ViewController: NSViewController {
 		}
 	}
 	
+	@IBAction func HandleQuit(_ sender: NSMenuItem) {
+		let delegate = (NSApp.delegate as! AppDelegate)
+		if delegate.hasChanges() {
+			let alert = NSAlert()
+			alert.messageText = "Are you sure you want to quit?"
+			alert.informativeText = "Do you want to save the updated sizes? If you don't save, the next scan will reference the sizes from your last save. If you do save, the next scan will be compared against the most recent scan you did."
+			alert.alertStyle = .informational
+			alert.addButton(withTitle: "Save & Quit")
+			alert.addButton(withTitle: "Quit without saving")
+			alert.addButton(withTitle: "Cancel")
+			alert.beginSheetModal(for: self.view.window!) { (res) in
+				if res == .alertFirstButtonReturn {
+					delegate.saveAction(sender)
+					NSApplication.shared.terminate(nil)
+				} else if res == .alertSecondButtonReturn {
+					NSApplication.shared.terminate(nil)
+				}
+			}
+		} else {
+			NSApplication.shared.terminate(nil)
+		}
+	}
+	
 	@IBAction func HandleMainMenu(_ sender: NSMenuItem) {
 		if sender.title == "Open…" {
 			let openPanel = NSOpenPanel()

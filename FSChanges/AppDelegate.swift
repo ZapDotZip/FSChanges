@@ -13,13 +13,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		bgContext = (NSApp.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
-		bgContext!.automaticallyMergesChangesFromParent = true
 		
-		_ = StoredData.init()
-		StoredData.context = bgContext
-		StoredData.AppDel = self
 		_ = GenerateTree.init()
 		GenerateTree.context = bgContext
+		GenerateTree.fetch.fetchLimit = 1
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -67,13 +64,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		if bgContext!.hasChanges {
 			do {
 				try bgContext!.save()
-				print("Saved Core Data")
+				NSLog("Saved Core Data")
 			} catch {
 				// Customize this code block to include application-specific recovery steps.
 				let nserror = error as NSError
 				NSApplication.shared.presentError(nserror)
 			}
 		}
+	}
+	
+	func hasChanges() -> Bool {
+		return bgContext?.hasChanges ?? false
 	}
 	
 	func windowWillReturnUndoManager(window: NSWindow) -> UndoManager? {

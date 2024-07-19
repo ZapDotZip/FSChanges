@@ -73,19 +73,17 @@ struct GenerateTree {
 	static var suppressPermissionErrors: Bool = false
 	static var viewCon: ViewController?
 	static var context: NSManagedObjectContext?
+	static let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "SavedFileInfo")
 	
-	static func recursiveGen(path: URL, sfi: SavedFolderInfo) -> ([TreeNode], Int) {
+	
+	static func recursiveGen(path: URL) -> ([TreeNode], Int, Int) {
 		var nodes = [TreeNode]()
 		var totalSize: Int = 0
-		
-		// if true, means that the item was scanned
-		// if false, item hasn't been scanned yet or was deleted
-		var children: [Bool] = [Bool](repeating: false, count: sfi.children?.count ?? 0)
-		var childFolders: [Bool] = [Bool](repeating: false, count: sfi.childFolders?.count ?? 0)
-		
+		var netSize: Int = 0
+				
 		if let enumerator = FileManager.default.enumerator(at: path, includingPropertiesForKeys: resourceKeys, options: [.skipsSubdirectoryDescendants], errorHandler: { (url, err) -> Bool in
 			DispatchQueue.main.async {
-				print("Error recursing into directory: \(err)")
+				NSLog("Error recursing into directory: \(err)")
 				if (err as NSError).code == 257 && !suppressPermissionErrors {
 					let alert = NSAlert()
 					alert.messageText = "Unable to scan item due to permissions"
@@ -105,67 +103,58 @@ struct GenerateTree {
 			for case let i as URL in enumerator {
 				do {
 					let resValues = try i.resourceValues(forKeys: Set(resourceKeys))
-					let lpc = i.lastPathComponent
 					if resValues.isDirectory ?? false {
-						// only update the display on directory scans.
+						
 						DispatchQueue.main.async {
 							viewCon?.progress.doubleValue += 1.0
 							viewCon?.progressLabel.stringValue = i.path
 						}
 						
-						var found: SavedFolderInfo?
-						if let list = sfi.childFolders {
-							for (idx, c) in list.enumerated() {
-								if (!childFolders[idx]) && (c as! SavedFolderInfo).name == lpc {
-									found = (c as! SavedFolderInfo)
-									childFolders[idx] = true
-									break
-								}
-							}
-						}
-						if found == nil {
-							found = SavedFolderInfo.init(context: context!)
-							found!.name = lpc
-							sfi.addToChildFolders(found!)
-							childFolders.append(true)
-						}
-						
-						let (children, childrenTotalSize) = recursiveGen(path: i, sfi: found!)
-						let netSize = childrenTotalSize - Int(found?.size ?? 0)
-						found!.size = Int64(childrenTotalSize)
-						nodes.append(TreeNode.init(url: i, isDir: true, totalFileAllocatedSize: childrenTotalSize, netSize: netSize, children: children))
+						let (children, childrenTotalSize, childrenNetSize) = recursiveGen(path: i)
+						nodes.append(TreeNode.init(url: i, isDir: true, totalFileAllocatedSize: childrenTotalSize, netSize: childrenNetSize, children: children))
 						totalSize += childrenTotalSize
-						
-						
+						netSize += childrenNetSize
 					} else {
-						
-						var found: SavedFileInfo?
-						if let list = sfi.children {
-							for (idx, c) in list.enumerated() {
-								if (c as! SavedFileInfo).name == lpc {
-									found = (c as! SavedFileInfo)
-									children[idx] = true
-									break
+						var sfi: SavedFileInfo {
+							do {
+								fetch.predicate = NSPredicate(format: "path = %@", i.path)
+								let result = try context!.fetch(fetch) as! [SavedFileInfo]
+								if result.count == 0 {
+									let f = SavedFileInfo.init(context: context!)
+									f.path = i.path
+									f.totalFileSize = 0
+									return f
+								} else {
+									return result[0]
+								}
+							} catch {
+								DispatchQueue.main.async {
+									let alert = NSAlert()
+									alert.messageText = "An error occurred accessing the database."
+									alert.informativeText = error.localizedDescription
+									alert.alertStyle = .critical
+									alert.addButton(withTitle: "Quit")
+									alert.runModal()
+									NSApplication.shared.terminate(nil)
 								}
 							}
-						}
-						if found == nil {
-							found = SavedFileInfo.init(context: context!)
-							found!.name = lpc
-							sfi.addToChildren(found!)
-							//print("new child: \(String(describing: found?.name)), \(children.count)")
+							NSLog("Something went REALLY wrong for this message to appear!")
+							return SavedFileInfo.init(context: context!)
 						}
 						
 						let totalFileSize = resValues.totalFileAllocatedSize ?? 0
-						let netSize = totalFileSize - Int(found?.totalFileSize ?? 0)
-						found!.totalFileSize = Int64(totalFileSize)
-						nodes.append(TreeNode.init(url: i, isDir: false, totalFileAllocatedSize: totalFileSize, netSize: netSize))
+						let netFileSize = totalFileSize - Int(sfi.totalFileSize)
+						if netFileSize != 0 {
+							sfi.totalFileSize = Int64(totalFileSize)
+						}
+						nodes.append(TreeNode.init(url: i, isDir: false, totalFileAllocatedSize: totalFileSize, netSize: netFileSize))
 						
-						totalSize += resValues.totalFileAllocatedSize ?? 0
+						totalSize += totalFileSize
+						netSize += netFileSize
 					}
 				} catch  {
 					DispatchQueue.main.async {
-						print("error: \(error)")
+						NSLog("error: \(error)")
 						let alert = NSAlert()
 						alert.messageText = "Unable to scan item"
 						alert.informativeText = "\(i.absoluteString) could not be opened due to an error:\n\n\(error.localizedDescription)"
@@ -177,14 +166,13 @@ struct GenerateTree {
 			}
 		}
 		nodes.sort()
-		return (nodes, totalSize)
+		return (nodes, totalSize, netSize)
 	}
 	
 	
 	static func multiFolderLoader(paths: [URL]) {
 		for u in paths {
-			let (children, totalSize) = GenerateTree.recursiveGen(path: u, sfi: StoredData.goToFolder(path: u))
-			let netSize = children.reduce(0) { $0 + $1.netSize }
+			let (children, totalSize, netSize) = GenerateTree.recursiveGen(path: u)
 			let selectedRootNode: TreeNode = TreeNode.init(url: u, isDir: true, totalFileAllocatedSize: totalSize, netSize: netSize, children: children)
 			DispatchQueue.main.async {
 				self.viewCon!.content.append(selectedRootNode)
@@ -198,7 +186,7 @@ struct GenerateTree {
 	}
 	
 	static func folderLoader(path: URL) {
-		let (selectedRootNode, _) = GenerateTree.recursiveGen(path: path, sfi: StoredData.goToFolder(path: path))
+		let (selectedRootNode, _, _) = GenerateTree.recursiveGen(path: path)
 		DispatchQueue.main.async {
 			self.viewCon!.content.append(contentsOf: selectedRootNode)
 			self.viewCon!.progress.doubleValue = self.viewCon!.progress.maxValue
