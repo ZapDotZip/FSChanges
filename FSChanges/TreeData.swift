@@ -7,7 +7,7 @@ import Foundation
 import Cocoa
 
 
-@objc public class TreeNode: NSObject, Comparable {
+@objc public final class TreeNode: NSObject, Comparable {
 	/*
 	public static func < (lhs: TreeNode, rhs: TreeNode) -> Bool {
 	return lhs.url.absoluteString < rhs.url.absoluteString
@@ -165,22 +165,20 @@ struct GenerateTree {
 		for u in paths {
 			
 			SPIfetch.predicate = NSPredicate(format: "path = %@", u.path)
-			var result: SelectedPathInfo {
-				if let res = try? (context!.fetch(SPIfetch) as! [SelectedPathInfo]).first {
-					DispatchQueue.main.async {
-						self.viewCon!.setProgressMax(max: Double(res.lastItemCount))
-					}
-					return res
-				} else {
-					DispatchQueue.main.async {
-						self.viewCon!.resetProgressBar()
-					}
-					let spi = SelectedPathInfo.init(context: context!)
-					spi.path = u.path
-					return spi
+			var result: SelectedPathInfo
+			if let res = try? (context!.fetch(SPIfetch) as! [SelectedPathInfo]).first {
+				DispatchQueue.main.async {
+					self.viewCon?.setProgressMax(max: Double(res.lastItemCount))
 				}
+				result = res
+			} else {
+				DispatchQueue.main.async {
+					self.viewCon?.resetProgressBar()
+				}
+				let spi = SelectedPathInfo.init(context: context!)
+				spi.path = u.path
+				result = spi
 			}
-			
 			let (children, totalSize, netSize, itemCount) = GenerateTree.recursiveGen(path: u)
 			let scannedFolder: TreeNode = TreeNode.init(url: u, isDir: true, totalFileAllocatedSize: totalSize, netSize: netSize, children: children)
 			DispatchQueue.main.async {
