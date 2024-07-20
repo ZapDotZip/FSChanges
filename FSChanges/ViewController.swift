@@ -25,8 +25,45 @@ final class ViewController: NSViewController {
 		outlineView.autosaveExpandedItems = false
 		treeController.bind(NSBindingName(rawValue: "contentArray"), to: self, withKeyPath: "content", options: nil)
 		outlineView.bind(NSBindingName(rawValue: "content"), to: treeController, withKeyPath: "arrangedObjects", options: nil)
-		progress.maxValue = 10000.0
+		resetProgressBar()
 	}
+	
+	func setProgress(value: Double) {
+		progress.doubleValue = value
+	}
+	
+	func setProgressMax(max: Double) {
+		progress.maxValue = max
+	}
+	
+	func resetProgressBar() {
+		progress.maxValue = 10000.0
+		progress.doubleValue = 0.0
+	}
+	
+	func completeProgressBar() {
+		progress.maxValue = 100.0
+		progress.doubleValue = 100.0
+		progressLabel.stringValue = "Finished scan."
+	}
+	
+	func displayProgress(value: Double, msg: String) {
+		progress.doubleValue = value
+		progressLabel.stringValue = msg
+	}
+	
+	func incrementProgress() {
+		progress.doubleValue += 1.0
+	}
+	
+	func incrementProgress(msg: String) {
+		progress.doubleValue += 1.0
+		progressLabel.stringValue = msg
+	}
+	
+	
+	
+	
 	
 	override var representedObject: Any? {
 		didSet {

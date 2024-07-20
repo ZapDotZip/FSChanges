@@ -74,12 +74,14 @@ struct GenerateTree {
 	static var viewCon: ViewController?
 	static var context: NSManagedObjectContext?
 	static let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "SavedFileInfo")
+	static let SPIfetch = NSFetchRequest<NSFetchRequestResult>(entityName: "SelectedPathInfo")
 	
 	
-	static func recursiveGen(path: URL) -> ([TreeNode], Int, Int) {
+	static func recursiveGen(path: URL) -> ([TreeNode], Int, Int, Int) {
 		var nodes = [TreeNode]()
 		var totalSize: Int = 0
 		var netSize: Int = 0
+		var count: Int = 0
 				
 		if let enumerator = FileManager.default.enumerator(at: path, includingPropertiesForKeys: resourceKeys, options: [.skipsSubdirectoryDescendants], errorHandler: { (url, err) -> Bool in
 			DispatchQueue.main.async {
@@ -106,15 +108,18 @@ struct GenerateTree {
 					if resValues.isDirectory ?? false {
 						
 						DispatchQueue.main.async {
-							viewCon?.progress.doubleValue += 1.0
-							viewCon?.progressLabel.stringValue = i.path
+							viewCon?.incrementProgress(msg: i.path)
 						}
 						
-						let (children, childrenTotalSize, childrenNetSize) = recursiveGen(path: i)
+						let (children, childrenTotalSize, childrenNetSize, childCount) = recursiveGen(path: i)
 						nodes.append(TreeNode.init(url: i, isDir: true, totalFileAllocatedSize: childrenTotalSize, netSize: childrenNetSize, children: children))
 						totalSize += childrenTotalSize
 						netSize += childrenNetSize
+						count += childCount + 1
 					} else {
+						DispatchQueue.main.async {
+							viewCon?.incrementProgress()
+						}
 						var sfi: SavedFileInfo {
 							fetch.predicate = NSPredicate(format: "path = %@", i.path)
 							if let result = try? (context!.fetch(fetch) as! [SavedFileInfo]).first {
@@ -136,6 +141,7 @@ struct GenerateTree {
 						
 						totalSize += totalFileSize
 						netSize += netFileSize
+						count += 1
 					}
 				} catch  {
 					DispatchQueue.main.async {
@@ -151,31 +157,70 @@ struct GenerateTree {
 			}
 		}
 		nodes.sort()
-		return (nodes, totalSize, netSize)
+		return (nodes, totalSize, netSize, count)
 	}
 	
 	
 	static func multiFolderLoader(paths: [URL]) {
 		for u in paths {
-			let (children, totalSize, netSize) = GenerateTree.recursiveGen(path: u)
-			let selectedRootNode: TreeNode = TreeNode.init(url: u, isDir: true, totalFileAllocatedSize: totalSize, netSize: netSize, children: children)
+			
+			SPIfetch.predicate = NSPredicate(format: "path = %@", u.path)
+			var result: SelectedPathInfo {
+				if let res = try? (context!.fetch(SPIfetch) as! [SelectedPathInfo]).first {
+					DispatchQueue.main.async {
+						self.viewCon!.setProgressMax(max: Double(res.lastItemCount))
+					}
+					return res
+				} else {
+					DispatchQueue.main.async {
+						self.viewCon!.resetProgressBar()
+					}
+					let spi = SelectedPathInfo.init(context: context!)
+					spi.path = u.path
+					return spi
+				}
+			}
+			
+			let (children, totalSize, netSize, itemCount) = GenerateTree.recursiveGen(path: u)
+			let scannedFolder: TreeNode = TreeNode.init(url: u, isDir: true, totalFileAllocatedSize: totalSize, netSize: netSize, children: children)
 			DispatchQueue.main.async {
-				self.viewCon!.content.append(selectedRootNode)
-				self.viewCon!.progress.doubleValue = 0.0
+				self.viewCon!.content.append(scannedFolder)
+				self.viewCon!.completeProgressBar()
+			}
+			if result.lastItemCount != Int64(itemCount) {
+				result.lastItemCount = Int64(itemCount)
 			}
 		}
 		DispatchQueue.main.async {
-			self.viewCon!.progress.doubleValue = self.viewCon!.progress.maxValue
-			self.viewCon!.progressLabel.stringValue = "All done."
+			self.viewCon!.completeProgressBar()
 		}
 	}
 	
 	static func folderLoader(path: URL) {
-		let (selectedRootNode, _, _) = GenerateTree.recursiveGen(path: path)
-		DispatchQueue.main.async {
-			self.viewCon!.content.append(contentsOf: selectedRootNode)
-			self.viewCon!.progress.doubleValue = self.viewCon!.progress.maxValue
-			self.viewCon!.progressLabel.stringValue = "All done."
+		SPIfetch.predicate = NSPredicate(format: "path = %@", path.path)
+		var result: SelectedPathInfo
+		if let res = try? (context!.fetch(SPIfetch) as! [SelectedPathInfo]).first {
+			DispatchQueue.main.async {
+				self.viewCon?.setProgressMax(max: Double(res.lastItemCount))
+			}
+			result = res
+		} else {
+			DispatchQueue.main.async {
+				self.viewCon?.resetProgressBar()
+			}
+			let spi = SelectedPathInfo.init(context: context!)
+			spi.path = path.path
+			result = spi
 		}
+		let (scannedFolder, _, _, itemCount) = GenerateTree.recursiveGen(path: path)
+		DispatchQueue.main.async {
+			self.viewCon!.content.append(contentsOf: scannedFolder)
+			self.viewCon!.progress.maxValue = Double(itemCount)
+			self.viewCon!.completeProgressBar()
+		}
+		if result.lastItemCount != Int64(itemCount) {
+			result.lastItemCount = Int64(itemCount)
+		}
+		
 	}
 }

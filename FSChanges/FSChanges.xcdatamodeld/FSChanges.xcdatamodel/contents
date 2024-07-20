@@ -12,7 +12,17 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="SelectedPathInfo" representedClassName="SelectedPathInfo" syncable="YES" codeGenerationType="class">
+        <attribute name="lastItemCount" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="path" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="path"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <elements>
         <element name="SavedFileInfo" positionX="-63" positionY="-18" width="128" height="73"/>
+        <element name="SelectedPathInfo" positionX="-63" positionY="0" width="128" height="73"/>
     </elements>
 </model>

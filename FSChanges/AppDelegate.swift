@@ -17,6 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		_ = GenerateTree.init()
 		GenerateTree.context = bgContext
 		GenerateTree.fetch.fetchLimit = 1
+		GenerateTree.SPIfetch.fetchLimit = 1
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
