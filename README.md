@@ -14,3 +14,5 @@ Instead of running the same old disk scanning tool that just tells you all the l
 - Properly handle administrator access.
 - Multithreaded scanning
 - Exclude other volumes
+- Add reload functionality
+- Add drag-and-drop support
