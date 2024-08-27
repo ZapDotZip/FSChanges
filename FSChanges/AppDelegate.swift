@@ -9,7 +9,7 @@ import OSLog
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 	private var bgContext: NSManagedObjectContext?
-	
+	private var quitDoNotPassGo: Bool = false
 	
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		bgContext = (NSApp.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
@@ -17,7 +17,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		_ = GenerateTree.init()
 		GenerateTree.context = bgContext
 		GenerateTree.fetch.fetchLimit = 1
-		GenerateTree.SPIfetch.fetchLimit = 1
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -47,7 +46,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				 * The store could not be migrated to the current model version.
 				 Check the error message to determine what the actual problem was.
 				 */
-				fatalError("Unresolved error \(error)")
+				if (error as NSError).code == 134110 {
+					NSLog("Error: failed to migrate database: \(error)")
+					let alert = NSAlert()
+					alert.messageText = "Error: Failed to migrate database!"
+					alert.informativeText = "Sorry. Your database needs to be reset. This may be caused by an update that isn't set up to migrate your database, or your database has been corrupted.\n\n\(error.localizedDescription)"
+					alert.alertStyle = .critical
+					alert.addButton(withTitle: "Reset Database")
+					alert.addButton(withTitle: "Quit")
+					if alert.runModal() == .alertFirstButtonReturn {
+						if let url = storeDescription.url {
+							NSLog("Deleting file(s) at: \(url)")
+							try? FileManager.default.removeItem(at: url)
+						}
+					}
+					self.quitDoNotPassGo = true
+					NSApplication.shared.terminate(nil)
+				} else {
+					let alert = NSAlert()
+					alert.messageText = "Error loading database"
+					alert.informativeText = "This error hasn't been handled by the developer.\n\n\(error.localizedDescription)"
+					alert.alertStyle = .critical
+					alert.addButton(withTitle: "Exit")
+					alert.runModal()
+					fatalError("Unresolvable error \(error)")
+				}
+				
 			}
 		})
 		return container
@@ -84,6 +108,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 	
 	func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+		if quitDoNotPassGo { return .terminateNow }
 		
 		if !bgContext!.commitEditing() {
 			NSLog("\(NSStringFromClass(type(of: self))) unable to commit editing to terminate")
