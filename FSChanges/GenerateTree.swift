@@ -10,21 +10,21 @@ import Cocoa
 struct GenerateTree {
 	static let resourceKeys: [URLResourceKey] = [.isDirectoryKey, .fileSizeKey, .fileAllocatedSizeKey, .totalFileAllocatedSizeKey]
 	static let fmt = ByteCountFormatter()
-	static var suppressPermissionErrors: Bool = false
+	static var suppressPermissionErrors: Bool = UserDefaults.standard.bool(forKey: "Ignore Permissions Errors")
 	static var viewCon: ViewController!
 	static var context: NSManagedObjectContext!
 	static let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "SavedFileInfo")
 	
 	/// Recursively scans path.
 	/// - Parameters:
-	///   - path: The path to scan
-	///   - parent: The path's directory.
+	///   - path: The path of the folder to scan
+	///   - folder: The saved info of the folder to scan.
 	/// - Returns:
 	///   - [TreeNode]: the tree of children
 	///   - Int: childrenTotalSize
 	///   - Int: childrenNetSize
 	///   - Int: childCount
-	static func recursiveGen(path: URL, parent: SavedDirectoryInfo) -> ([TreeNode], Int, Int, Int64) {
+	static func recursiveGen(path: URL, folder: SavedDirectoryInfo) -> ([TreeNode], Int, Int, Int64) {
 		var nodes = [TreeNode]()
 		var totalSize: Int = 0
 		var netSize: Int = 0
@@ -32,8 +32,8 @@ struct GenerateTree {
 		
 		// Skip over string comparisons of files we've already seen.
 		// May be used as a list to remove deleted items after the loop.
-		var files: [Bool] = [Bool](repeating: false, count: parent.files?.count ?? 0)
-		var subdirectories: [Bool] = [Bool](repeating: false, count: parent.subdirectories?.count ?? 0)
+		var files: [Bool] = [Bool](repeating: false, count: folder.files?.count ?? 0)
+		var subdirectories: [Bool] = [Bool](repeating: false, count: folder.subdirectories?.count ?? 0)
 
 		if let enumerator = FileManager.default.enumerator(at: path, includingPropertiesForKeys: resourceKeys, options: [.skipsSubdirectoryDescendants], errorHandler: { (url, err) -> Bool in
 			DispatchQueue.main.async {
@@ -49,6 +49,7 @@ struct GenerateTree {
 					alert.runModal()
 					if let suppressionButton = alert.suppressionButton, suppressionButton.state == .on {
 						suppressPermissionErrors = true
+						UserDefaults.standard.set(true, forKey: "Ignore Permissions Errors")
 					}
 				}
 			}
@@ -65,7 +66,7 @@ struct GenerateTree {
 						}
 						
 						let sdi: SavedDirectoryInfo = {
-							if let list = parent.subdirectories {
+							if let list = folder.subdirectories {
 								for (idx, _) in subdirectories.enumerated() {
 									if !subdirectories[idx] && (list[idx] as! SavedDirectoryInfo).name == lpc {
 										subdirectories[idx] = true
@@ -75,12 +76,12 @@ struct GenerateTree {
 							}
 							let sdi = SavedDirectoryInfo.init(context: context!)
 							sdi.name = lpc
-							parent.addToSubdirectories(sdi)
+							folder.addToSubdirectories(sdi)
 							subdirectories.append(true)
 							return sdi
 						}()
 						
-						let (children, childrenTotalSize, childrenNetSize, childCount) = recursiveGen(path: i, parent: sdi)
+						let (children, childrenTotalSize, childrenNetSize, childCount) = recursiveGen(path: i, folder: sdi)
 						nodes.append(TreeNode.init(url: i, isDir: true, totalFileAllocatedSize: childrenTotalSize, netSize: childrenNetSize, children: children))
 						sdi.count = childCount
 						totalSize += childrenTotalSize
@@ -93,7 +94,7 @@ struct GenerateTree {
 						}
 						
 						let sfi: SavedFileInfo = {
-							if let list = parent.files {
+							if let list = folder.files {
 								for (idx, _) in files.enumerated() {
 									if !files[idx] && (list[idx] as! SavedFileInfo).name == lpc {
 										files[idx] = true
@@ -103,7 +104,7 @@ struct GenerateTree {
 							}
 							let sfi = SavedFileInfo.init(context: context!)
 							sfi.name = lpc
-							parent.addToFiles(sfi)
+							folder.addToFiles(sfi)
 							return sfi
 						}()
 						

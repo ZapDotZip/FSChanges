@@ -12,7 +12,7 @@
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SavedDirectoryInfo" inverseName="files" inverseEntity="SavedDirectoryInfo"/>
     </entity>
     <elements>
-        <element name="SavedFileInfo" positionX="-63" positionY="-18" width="128" height="88"/>
         <element name="SavedDirectoryInfo" positionX="-63" positionY="0" width="128" height="103"/>
+        <element name="SavedFileInfo" positionX="-63" positionY="-18" width="128" height="88"/>
     </elements>
 </model>

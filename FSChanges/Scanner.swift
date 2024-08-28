@@ -7,6 +7,7 @@ import Foundation
 import CoreData
 import Cocoa
 
+/// A static object which handles the setup for scanning directories.
 struct Scanner {
 	static var context: NSManagedObjectContext!
 	static var appDel: AppDelegate!
@@ -41,6 +42,8 @@ struct Scanner {
 		return rn!
 	}()
 	
+	/// Returns the SavedDirectoryInfo of the folder that the path is pointing to.
+	/// - Parameter path: The path of the folder.
 	static func goToFolder(path: URL) -> SavedDirectoryInfo {
 		var currentNode = rootNode
 		for i in path.pathComponents {
@@ -68,45 +71,50 @@ struct Scanner {
 		return nil
 	}
 	
+	private static func innerFolderLoader(_ path: URL) -> TreeNode {
+		let root = Scanner.goToFolder(path: path)
+		DispatchQueue.main.async {
+			if root.count == 0 {
+				viewCon.setIndeterminateProgressBar(true)
+			} else {
+				self.viewCon.resetProgressBar(maxValue: Double(root.count))
+			}
+		}
+		
+		let (scannedFolder, childrenTotalSize, childrenNetSize, itemCount) = GenerateTree.recursiveGen(path: path, folder: root)
+		root.count = itemCount
+		let selectedRootNode = TreeNode.init(url: path, isDir: true, totalFileAllocatedSize: childrenTotalSize, netSize: childrenNetSize, children: scannedFolder)
+		return selectedRootNode
+	}
+	
+	
+	static var singleChild: TreeNode?
 	
 	// TODO: re-implement with drag-and-drop support
 	static func multiFolderLoader(paths: [URL]) {
-		for u in paths {
-			let root = Scanner.goToFolder(path: u)
-			DispatchQueue.main.async {
-				self.viewCon.resetProgressBar()
-				self.viewCon.setProgressMax(max: Double(root.count))
+		DispatchQueue.global().async {
+			for path in paths {
+				let tn = innerFolderLoader(path)
+				DispatchQueue.main.async {
+					self.viewCon.setMessage("Finalizing results...")
+					self.viewCon.content.append(tn)
+					self.viewCon.completeProgressBar()
+				}
 			}
-			
-			let (scannedFolder, _, _, itemCount) = GenerateTree.recursiveGen(path: u, parent: root)
-			
 			DispatchQueue.main.async {
-				self.viewCon.setMessage("Finalizing results...")
-				self.viewCon.content.append(contentsOf: scannedFolder)
-				self.viewCon.progress.maxValue = Double(itemCount)
 				self.viewCon.completeProgressBar()
 			}
-		}
-		DispatchQueue.main.async {
-			self.viewCon.completeProgressBar()
 		}
 	}
 	
 	static func folderLoader(path: URL) {
-		let root = Scanner.goToFolder(path: path)
-		DispatchQueue.main.async {
-			self.viewCon.resetProgressBar()
-			self.viewCon.setProgressMax(max: Double(root.count))
-		}
-		
-		let (scannedFolder, _, _, itemCount) = GenerateTree.recursiveGen(path: path, parent: root)
-		
-		DispatchQueue.main.async {
-			self.viewCon.setMessage("Finalizing results...")
-			self.viewCon.content.append(contentsOf: scannedFolder)
-			self.viewCon.progress.maxValue = Double(itemCount)
-			self.viewCon.completeProgressBar()
+		DispatchQueue.global().async {
+			singleChild = innerFolderLoader(path)
+			DispatchQueue.main.async {
+				self.viewCon.setMessage("Finalizing results...")
+				self.viewCon.content.append(contentsOf: singleChild!.children)
+				self.viewCon.completeProgressBar()
+			}
 		}
 	}
-	
 }

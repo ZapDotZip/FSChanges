@@ -13,11 +13,14 @@ final class ViewController: NSViewController {
 	private let treeController = NSTreeController()
 	@objc dynamic var content = [TreeNode]()
 	
+	private let appDel = NSApp.delegate as! AppDelegate
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		GenerateTree.viewCon = self
 		Scanner.viewCon = self
 		outlineView.delegate = self
+		appDel.viewCon = self
 		
 		treeController.objectClass = TreeNode.self
 		treeController.childrenKeyPath = "children"
@@ -37,15 +40,17 @@ final class ViewController: NSViewController {
 		progress.maxValue = max
 	}
 	
-	func resetProgressBar() {
-		progress.maxValue = 10000.0
+	func resetProgressBar(maxValue: Double = 10000.0) {
+		setIndeterminateProgressBar(false)
+		progress.maxValue = maxValue
 		progress.doubleValue = 0.0
 	}
 	
-	func completeProgressBar() {
+	func completeProgressBar(_ msg: String = "Finished scan.") {
+		setIndeterminateProgressBar(false)
 		progress.maxValue = 100.0
 		progress.doubleValue = 100.0
-		progressLabel.stringValue = "Finished scan."
+		progressLabel.stringValue = msg
 	}
 	
 	func displayProgress(value: Double, msg: String) {
@@ -60,6 +65,15 @@ final class ViewController: NSViewController {
 	func incrementProgress(msg: String) {
 		progress.doubleValue += 1.0
 		progressLabel.stringValue = msg
+	}
+	
+	func setIndeterminateProgressBar(_ val: Bool) {
+		progress.isIndeterminate = val
+		if val {
+			progress.startAnimation(nil)
+		} else {
+			progress.stopAnimation(nil)
+		}
 	}
 	
 	func setMessage(_ msg: String) {
@@ -90,17 +104,12 @@ final class ViewController: NSViewController {
 					self.view.window?.setTitleWithRepresentedFilename(openPanel.urls[0].path)
 					self.view.window?.title = "FSChanges: \(openPanel.urls.count) open directories including \(openPanel.urls[0].path)"
 					let paths = openPanel.urls
-					DispatchQueue.global().async {
-						Scanner.multiFolderLoader(paths: paths)
-					}
+					Scanner.multiFolderLoader(paths: paths)
 				} else {
 					//self.view.window?.title = "FSChanges: \(u.path)"
 					let u = openPanel.urls[0]
 					self.view.window?.setTitleWithRepresentedFilename(u.path)
-					
-					DispatchQueue.global().async {
-						Scanner.folderLoader(path: u)
-					}
+					Scanner.folderLoader(path: u)
 				}
 			}
 		}

@@ -11,6 +11,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	private var bgContext: NSManagedObjectContext?
 	private var quitDoNotPassGo: Bool = false
 	
+	var viewCon: ViewController!
+	
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		bgContext = (NSApp.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
 		
@@ -89,14 +91,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			NSLog("\(NSStringFromClass(type(of: self))) unable to commit editing before saving")
 		}
 		if bgContext!.hasChanges {
-			do {
-				try bgContext!.save()
-				NSLog("Saved Core Data")
-			} catch {
-				// Customize this code block to include application-specific recovery steps.
-				let nserror = error as NSError
-				NSApplication.shared.presentError(nserror)
+			viewCon.setMessage("Saving...")
+			viewCon.setIndeterminateProgressBar(true)
+			DispatchQueue.global().async {
+				do {
+					try self.bgContext!.save()
+					NSLog("Saved Core Data")
+				} catch {
+					// Customize this code block to include application-specific recovery steps.
+					let nserror = error as NSError
+					NSApplication.shared.presentError(nserror)
+				}
 			}
+			viewCon.completeProgressBar("Saved!")
 		}
 	}
 	
