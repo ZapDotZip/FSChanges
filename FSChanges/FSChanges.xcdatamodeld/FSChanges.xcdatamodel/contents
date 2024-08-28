@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="18G9323" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="SavedFileInfo" representedClassName="SavedFileInfo" syncable="YES" codeGenerationType="class">
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="totalFileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SavedFolderInfo" inverseName="children" inverseEntity="SavedFolderInfo"/>
+    <entity name="SavedDirectoryInfo" representedClassName="SavedDirectoryInfo" syncable="YES" codeGenerationType="class">
+        <attribute name="count" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="files" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SavedFileInfo" inverseName="parent" inverseEntity="SavedFileInfo"/>
+        <relationship name="subdirectories" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SavedDirectoryInfo" inverseName="subdirectories" inverseEntity="SavedDirectoryInfo"/>
     </entity>
-    <entity name="SavedFolderInfo" representedClassName="SavedFolderInfo" syncable="YES" codeGenerationType="class">
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="size" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="childFolders" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SavedFolderInfo" inverseName="childFolders" inverseEntity="SavedFolderInfo"/>
-        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SavedFileInfo" inverseName="parent" inverseEntity="SavedFileInfo"/>
+    <entity name="SavedFileInfo" representedClassName="SavedFileInfo" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="totalFileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SavedDirectoryInfo" inverseName="files" inverseEntity="SavedDirectoryInfo"/>
     </entity>
     <elements>
         <element name="SavedFileInfo" positionX="-63" positionY="-18" width="128" height="88"/>
-        <element name="SavedFolderInfo" positionX="-63" positionY="0" width="128" height="103"/>
+        <element name="SavedDirectoryInfo" positionX="-63" positionY="0" width="128" height="103"/>
     </elements>
 </model>

@@ -16,8 +16,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		
 		_ = GenerateTree.init()
 		GenerateTree.context = bgContext
-		StoredData.context = bgContext
-		StoredData.AppDel = self
+		Scanner.context = bgContext
+		Scanner.appDel = self
 		GenerateTree.fetch.fetchLimit = 1
 	}
 
