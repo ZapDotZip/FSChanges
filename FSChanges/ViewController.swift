@@ -16,6 +16,7 @@ final class ViewController: NSViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		GenerateTree.viewCon = self
+		Scanner.viewCon = self
 		outlineView.delegate = self
 		
 		treeController.objectClass = TreeNode.self
@@ -61,6 +62,10 @@ final class ViewController: NSViewController {
 		progressLabel.stringValue = msg
 	}
 	
+	func setMessage(_ msg: String) {
+		progressLabel.stringValue = msg
+	}
+	
 	
 	
 	
@@ -86,7 +91,7 @@ final class ViewController: NSViewController {
 					self.view.window?.title = "FSChanges: \(openPanel.urls.count) open directories including \(openPanel.urls[0].path)"
 					let paths = openPanel.urls
 					DispatchQueue.global().async {
-						GenerateTree.multiFolderLoader(paths: paths)
+						Scanner.multiFolderLoader(paths: paths)
 					}
 				} else {
 					//self.view.window?.title = "FSChanges: \(u.path)"
@@ -94,7 +99,7 @@ final class ViewController: NSViewController {
 					self.view.window?.setTitleWithRepresentedFilename(u.path)
 					
 					DispatchQueue.global().async {
-						GenerateTree.folderLoader(path: u)
+						Scanner.folderLoader(path: u)
 					}
 				}
 			}

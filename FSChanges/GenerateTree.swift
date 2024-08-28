@@ -66,10 +66,10 @@ struct GenerateTree {
 						
 						let sdi: SavedDirectoryInfo = {
 							if let list = parent.subdirectories {
-								for (idx, c) in list.enumerated() {
-									if (!subdirectories[idx]) && (c as! SavedDirectoryInfo).name == lpc {
+								for (idx, _) in subdirectories.enumerated() {
+									if !subdirectories[idx] && (list[idx] as! SavedDirectoryInfo).name == lpc {
 										subdirectories[idx] = true
-										return (c as! SavedDirectoryInfo)
+										return (list[idx] as! SavedDirectoryInfo)
 									}
 								}
 							}
@@ -94,10 +94,10 @@ struct GenerateTree {
 						
 						let sfi: SavedFileInfo = {
 							if let list = parent.files {
-								for (idx, c) in list.enumerated() {
-									if (c as! SavedFileInfo).name == lpc {
+								for (idx, _) in files.enumerated() {
+									if !files[idx] && (list[idx] as! SavedFileInfo).name == lpc {
 										files[idx] = true
-										return (c as! SavedFileInfo)
+										return (list[idx] as! SavedFileInfo)
 									}
 								}
 							}
