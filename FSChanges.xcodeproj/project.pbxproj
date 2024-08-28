@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED300EE72C7EA49B00501C86 /* StoredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED300EE62C7EA49B00501C86 /* StoredData.swift */; };
 		ED36712C2C2C796D001338A4 /* FSChanges.icns in Resources */ = {isa = PBXBuildFile; fileRef = ED36712B2C2C796D001338A4 /* FSChanges.icns */; };
 		ED96F76E2C1E6DE8001338A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED96F76D2C1E6DE8001338A4 /* AppDelegate.swift */; };
 		ED96F7702C1E6DE8001338A4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED96F76F2C1E6DE8001338A4 /* ViewController.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		ED300EE62C7EA49B00501C86 /* StoredData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoredData.swift; sourceTree = "<group>"; };
 		ED36712B2C2C796D001338A4 /* FSChanges.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = FSChanges.icns; sourceTree = "<group>"; };
 		ED96F76A2C1E6DE8001338A4 /* FSChanges.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FSChanges.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED96F76D2C1E6DE8001338A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 		ED96F76C2C1E6DE8001338A4 /* FSChanges */ = {
 			isa = PBXGroup;
 			children = (
+				ED300EE62C7EA49B00501C86 /* StoredData.swift */,
 				ED96F76D2C1E6DE8001338A4 /* AppDelegate.swift */,
 				ED96F76F2C1E6DE8001338A4 /* ViewController.swift */,
 				ED96F79B2C1E6E2D001338A4 /* TreeData.swift */,
@@ -270,6 +273,7 @@
 				ED96F7702C1E6DE8001338A4 /* ViewController.swift in Sources */,
 				ED96F76E2C1E6DE8001338A4 /* AppDelegate.swift in Sources */,
 				ED96F79C2C1E6E2D001338A4 /* TreeData.swift in Sources */,
+				ED300EE72C7EA49B00501C86 /* StoredData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
