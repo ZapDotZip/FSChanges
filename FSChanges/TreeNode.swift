@@ -27,7 +27,9 @@ import AppKit
 	//@objc let fileAllocatedSize: Int
 	@objc let totalFileAllocatedSize: Int
 	@objc let netSize: Int
-	@objc let icon: NSImage
+	@objc var icon: NSImage {
+		return NSWorkspace.shared.icon(forFile: url.path)
+	}
 	@objc var children: [TreeNode]
 	//  fileSize: Int, fileAllocatedSize: Int,
 	init(url: URL, isDir: Bool, totalFileAllocatedSize: Int, netSize: Int, children: [TreeNode] = []) {
@@ -39,7 +41,6 @@ import AppKit
 		self.totalFileAllocatedSize = totalFileAllocatedSize
 		self.netSize = netSize
 		self.children = children
-		self.icon = NSWorkspace.shared.icon(forFile: url.path)
 	}
 	
 	@objc var count: Int {
