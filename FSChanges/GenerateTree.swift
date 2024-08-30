@@ -83,7 +83,9 @@ struct GenerateTree {
 						
 						let (children, childrenTotalSize, childrenNetSize, childCount) = recursiveGen(path: i, folder: sdi)
 						nodes.append(TreeNode.init(url: i, isDir: true, totalFileAllocatedSize: childrenTotalSize, netSize: childrenNetSize, children: children))
-						sdi.count = childCount
+						if sdi.count != childCount {
+							sdi.count = childCount
+						}
 						totalSize += childrenTotalSize
 						netSize += childrenNetSize
 						count += childCount + 1

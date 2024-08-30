@@ -82,7 +82,9 @@ struct Scanner {
 		}
 		
 		let (scannedFolder, childrenTotalSize, childrenNetSize, itemCount) = GenerateTree.recursiveGen(path: path, folder: root)
-		root.count = itemCount
+		if root.count != itemCount {
+			root.count = itemCount
+		}
 		let selectedRootNode = TreeNode.init(url: path, isDir: true, totalFileAllocatedSize: childrenTotalSize, netSize: childrenNetSize, children: scannedFolder)
 		return selectedRootNode
 	}
