@@ -13,7 +13,6 @@ struct Scanner {
 	static var appDel: AppDelegate!
 	static var viewCon: ViewController!
 	static var rootNode: SavedDirectoryInfo = {
-		var rn: SavedDirectoryInfo?
 		do {
 			let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "SavedDirectoryInfo")
 			fetch.fetchLimit = 1
@@ -24,9 +23,9 @@ struct Scanner {
 				let rootAdd = SavedDirectoryInfo(context: context!)
 				rootAdd.name = "/"
 				appDel.saveAction(nil)
-				rn = rootAdd
+				return rootAdd
 			} else {
-				rn = (result[0] as! SavedDirectoryInfo)
+				return (result[0] as! SavedDirectoryInfo)
 			}
 			
 		} catch {
@@ -38,32 +37,31 @@ struct Scanner {
 			alert.addButton(withTitle: "Quit")
 			alert.runModal()
 			NSApplication.shared.terminate(nil)
+			exit(0)
 		}
-		return rn!
 	}()
 	
 	/// Returns the SavedDirectoryInfo of the folder that the path is pointing to.
 	/// - Parameter path: The path of the folder.
 	static func goToFolder(path: URL) -> SavedDirectoryInfo {
 		var currentNode = rootNode
-		for i in path.pathComponents {
-			if let cn = goToFolderInnerHelper(i: i, currentNode: currentNode) {
+		for folder in path.pathComponents {
+			if let cn = goToFolderInnerHelper(folderName: folder, currentNode: currentNode) {
 				currentNode = cn
 			} else {
 				let newfolder = SavedDirectoryInfo.init(context: context!)
-				newfolder.name = i
+				newfolder.name = folder
 				currentNode.addToSubdirectories(newfolder)
 				currentNode = newfolder
 			}
 		}
-		
 		return currentNode
 	}
 	
-	private static func goToFolderInnerHelper(i: String, currentNode: SavedDirectoryInfo) -> SavedDirectoryInfo? {
-		if (currentNode.subdirectories != nil) {
-			for c in currentNode.subdirectories! {
-				if (c as! SavedDirectoryInfo).name == i {
+	private static func goToFolderInnerHelper(folderName: String, currentNode: SavedDirectoryInfo) -> SavedDirectoryInfo? {
+		if let list = currentNode.subdirectories {
+			for c in list {
+				if (c as! SavedDirectoryInfo).name == folderName {
 					return (c as! SavedDirectoryInfo)
 				}
 			}

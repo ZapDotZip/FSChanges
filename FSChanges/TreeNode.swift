@@ -27,9 +27,9 @@ import AppKit
 	//@objc let fileAllocatedSize: Int
 	@objc let totalFileAllocatedSize: Int
 	@objc let netSize: Int
-	@objc var icon: NSImage {
+	@objc lazy var icon: NSImage = {
 		return NSWorkspace.shared.icon(forFile: url.path)
-	}
+	}()
 	@objc var children: [TreeNode]
 	//  fileSize: Int, fileAllocatedSize: Int,
 	init(url: URL, isDir: Bool, totalFileAllocatedSize: Int, netSize: Int, children: [TreeNode] = []) {
@@ -52,15 +52,10 @@ import AppKit
 	}
 	
 	override public var description: String {
-		get {
-			//return "\(url): fileSize: \(GenerateTree.fmt.string(fromByteCount: Int64(fileSize))), fileAllocatedSize: \(GenerateTree.fmt.string(fromByteCount: Int64(fileAllocatedSize))), totalFileAllocatedSize: \(GenerateTree.fmt.string(fromByteCount: Int64(totalFileAllocatedSize)))"
-			return "\(url): totalFileAllocatedSize: \(GenerateTree.fmt.string(fromByteCount: Int64(totalFileAllocatedSize)))"
-			
-		}	}
+		return "\(url): totalFileAllocatedSize: \(GenerateTree.fmt.string(fromByteCount: Int64(totalFileAllocatedSize)))"
+	}
 	
 	@objc var dataSize: String {
-		get {
-			return GenerateTree.fmt.string(fromByteCount: Int64(netSize))
-		}
+		return GenerateTree.fmt.string(fromByteCount: Int64(netSize))
 	}
 }

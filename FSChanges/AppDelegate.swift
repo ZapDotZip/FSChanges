@@ -58,11 +58,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 					alert.alertStyle = .critical
 					alert.addButton(withTitle: "Reset Database")
 					alert.addButton(withTitle: "Quit")
-					if alert.runModal() == .alertFirstButtonReturn {
-						if let url = storeDescription.url {
-							NSLog("Deleting file(s) at: \(url)")
-							try? FileManager.default.removeItem(at: url)
-						}
+					if alert.runModal() == .alertFirstButtonReturn, let url = storeDescription.url {
+						NSLog("Deleting file(s) at: \(url)")
+						try? FileManager.default.removeItem(at: url)
 					}
 					self.quitDoNotPassGo = true
 					NSApplication.shared.terminate(nil)
