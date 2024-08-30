@@ -20,7 +20,7 @@ import AppKit
 		return lhs.totalFileAllocatedSize > rhs.totalFileAllocatedSize
 	}
 	
-	@objc let url: URL
+	@objc let path: String
 	@objc let name: String
 	@objc let isDir: Bool
 	//@objc let fileSize: Int
@@ -28,12 +28,12 @@ import AppKit
 	@objc let totalFileAllocatedSize: Int
 	@objc let netSize: Int
 	@objc lazy var icon: NSImage = {
-		return NSWorkspace.shared.icon(forFile: url.path)
+		return NSWorkspace.shared.icon(forFile: path)
 	}()
 	@objc var children: [TreeNode]
 	//  fileSize: Int, fileAllocatedSize: Int,
 	init(url: URL, isDir: Bool, totalFileAllocatedSize: Int, netSize: Int, children: [TreeNode] = []) {
-		self.url = url
+		self.path = url.path
 		self.name = url.lastPathComponent
 		self.isDir = isDir
 		//self.fileSize = fileSize
@@ -52,7 +52,7 @@ import AppKit
 	}
 	
 	override public var description: String {
-		return "\(url): totalFileAllocatedSize: \(GenerateTree.fmt.string(fromByteCount: Int64(totalFileAllocatedSize)))"
+		return "\(path): totalFileAllocatedSize: \(GenerateTree.fmt.string(fromByteCount: Int64(totalFileAllocatedSize)))"
 	}
 	
 	@objc var dataSize: String {
