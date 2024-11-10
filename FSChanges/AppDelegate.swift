@@ -89,8 +89,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			NSLog("\(NSStringFromClass(type(of: self))) unable to commit editing before saving")
 		}
 		if bgContext!.hasChanges {
-			viewCon.setMessage("Saving...")
-			viewCon.setIndeterminateProgressBar(true)
+			DispatchQueue.main.async {
+				self.viewCon.setMessage("Saving...")
+				self.viewCon.setIndeterminateProgressBar(true)
+			}
 			DispatchQueue.global().async {
 				do {
 					try self.bgContext!.save()
@@ -98,7 +100,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				} catch {
 					// Customize this code block to include application-specific recovery steps.
 					let nserror = error as NSError
-					NSApplication.shared.presentError(nserror)
+					DispatchQueue.main.async {
+						NSApplication.shared.presentError(nserror)
+					}
 				}
 			}
 			viewCon.completeProgressBar("Saved!")
